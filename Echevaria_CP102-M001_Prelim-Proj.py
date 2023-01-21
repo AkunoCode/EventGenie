@@ -24,20 +24,37 @@ class Events:
     def summary(self):
         """Prints the summary of the data gathered from the text files"""
         # Automatically calls on the find() method with the pattern arguments
-        print(f"Event: {self.find(self.event_pattern)}")
-        print(f"Schedule: {self.find(self.date_pattern)}")
-        print(f"Sender Email: {self.find(self.email_pattern)}")
-        print(f"Sender Phone: {self.find(self.phone_pattern)}\n")
+        return f"Event: {self.find(self.event_pattern)}\nSchedule: {self.find(self.date_pattern)}\nSender Email: {self.find(self.email_pattern)}\nSender Phone: {self.find(self.phone_pattern)}\n\n"
 
+    def write_file(self, summary):
+        """Saves the summary on file"""
+        with open("Invitations_Summary.txt","w") as file:
+            file.write(summary)
+
+
+
+folder_path = "Echevaria_Prelim-Project/Invitations"
+summary = ""
 
 print("\nHERE IS THE SUMMARY OF ALL INVITATIONS:\n")
 
-folder_path = "Echevaria_Prelim-Project\Invitations"
-
-for filename in os.listdir(folder_path):
+for filename in os.listdir(folder_path): # os directory
     if filename.endswith(".txt"): # text files
         file_path = os.path.join(folder_path, filename) # Combines folder_path with filename to use it as file path for open() function
         with open(file_path, "r") as file: # opens file in read mode only
             text = file.read()
             event_catcher = Events(text) # Creates an event object
-            event_catcher.summary() # Prints summary
+            summary += event_catcher.summary()
+
+print(summary) # Prints summary
+
+# Prompts the user if they want to save the summary into a text file.
+while True:
+    save = input("Save summary to file? (yes/no): ").lower()
+    if save in ["yes","no"]:
+        if save == "yes":
+            event_catcher.write_file(summary)
+            print("File saved as 'Invitations_Summary.txt'")
+        break
+    else:
+        print("Please answer 'yes' or 'no'")
