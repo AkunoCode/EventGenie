@@ -33,7 +33,7 @@ class Events:
 
 
 
-folder_path = "Echevaria_Prelim-Project/Invitations"
+folder_path = "Invitations"
 summary = ""
 
 print("\nHERE IS THE SUMMARY OF ALL INVITATIONS:\n")
