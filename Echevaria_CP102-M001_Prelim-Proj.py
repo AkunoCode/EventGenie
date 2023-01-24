@@ -1,6 +1,6 @@
 # John Leo D. Echevaria (A22-34233)
 # CP102 - M001
-
+# Fix the class and use name, date, email, sender instead.
 import os
 import re
 
