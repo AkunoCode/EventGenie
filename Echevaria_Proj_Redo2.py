@@ -4,12 +4,12 @@
 import os
 import re
 import datetime
+from time import sleep as pause
 
 class Events:
     def __init__(self, text):
         """
-        Initialize an object with text, email_pattern,\n 
-        phone_pattern, event_pattern, date_pattern properties
+        Initialize an Event object
         """
         self.text = text
     
@@ -45,7 +45,7 @@ class Events:
     @property 
     def eventSender(self):
         """Returns the Matched Event Sender's Email and Phone Number"""
-        email_pattern = re.compile(r'\w+@\w+\.[a-zA-Z]{2,4}') # echevaria@example.com
+        email_pattern = re.compile(r'[\w.]+@\w+\.[a-zA-Z]{2,4}') # echevaria@example.com
         phone_pattern = re.compile(r'((\+63)[ -]?(\d{3})[ -]?(\d{3})[ -]?(\d{4}))|(09\d{9})') # +63-929-812-5470 or 09298125470
         return (self.find(email_pattern),self.find(phone_pattern))
     
@@ -69,7 +69,7 @@ class Events:
     def write_file(self, summary):
         """Prompts the user if they want to save the summary on a txt file"""
         while True:
-            save = input("Save summary to file? (yes/no): ").lower()
+            save = input("Save summary to a text file? (yes/no): ").lower()
             if save in ["yes","no"]:
                 if save == "yes":
                     with open("Invitations_Summary.txt","w") as file:
@@ -79,12 +79,28 @@ class Events:
             else:
                 print("Please answer 'yes' or 'no'")
 
+
 def main():
-    folder_path = "Invitations"
+    folder_path = input("\nThis program is set to read on the text files located at the Invitation folder.\nWould you like to update the folder path?\nIf yes, please type the path to the folder containing text files. If no, please type \"no\": ").lower()
+    if folder_path == "no":
+        start()
+    elif os.path.exists(folder_path):
+        start(folder_path)
+    else:
+        print("\nNo such folder found in the directory. Please make sure you are providing a correct path to the folder to avoid errors.")
+        main()
+
+
+def start(path="Invitations"):
+    folder_path = path
     event_list = []
 
-    print("\nDISCLAIMER:\nThe program uses specific patterns to match information inside the invitation.\nDue to this feature, other formats of the information may not get matched and return Not Found.\nIt may also return Not Found if no such information is present in the invitation.")
-    print("\nHERE IS THE SUMMARY OF ALL INVITATIONS:\n")
+    print("\nDISCLAIMER:\nThe program uses specific patterns to match information inside the invitation.\nDue to this feature, other formats of the information may not get matched and return Not Found.\nIt may also return Not Found if no such information is present in the invitation...\n") 
+    pause(10)
+    print("Extracting information from the text files...\n")
+    pause(3)
+    print(f"Summary of events from the {path}:\n")
+    pause(1)
 
     for filename in os.listdir(folder_path): # os directory
         if filename.endswith(".txt"): # text files
@@ -95,14 +111,20 @@ def main():
                 event_list.append(event.summary()) # Adds the summary of the event object to the list
     
     event_list.sort(key= lambda x: x["Event Date"]) # Sorts the list by value of "Event Date" (Earliest to Latest)
+    
     event_str = ""
     for i in event_list:
         for k,v in i.items():
             event_str += f"{k}: {v}\n"
         event_str += "\n"
-    
     print(event_str)
+    pause(1)
+    
     event.write_file(event_str)
+    pause(3)
+    
+    print("\nThank you!\n-John Leo D. Echevaria (A22-34233)")
+    pause(5)
 
 if __name__ == "__main__":
     main()
