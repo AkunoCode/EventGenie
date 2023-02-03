@@ -4,7 +4,7 @@ This program is used to extract information from invitations (text files) in a g
 This project is created as a mock-up for a bigger project that aims to directly access emails from your google account to fetch and sort the invitations in your email.
 
 ## Usage
-1. Place the text files containing the invitations in the invitation folder.
+1. Place the text files containing the invitations in the invitation folder or import a folder inside the Echevaria_Prelim-Proj folder and specify the folder name.
 2. Run the program.
 3. The program will automatically extract the information and print a summary for each text file in the specified folder.
 4. The program will then prompt you if you want to create a text file containing the summary of the events from the invitations.
@@ -21,5 +21,6 @@ This project is created as a mock-up for a bigger project that aims to directly 
 * summary(): A method that returns the summary of all properties of the event as a dictionary.
 * write_file(summary): A method that prompts the user to save the summary as a text file.
 ## Note
+* Please run the program and the folder in the same directory to avoid errors
 * The program only works with text files and only matches specific patterns. Any text that does not match the specified patterns will not be extracted.
 * The program is currently set to look for text files in "Echevaria_Prelim-Project\Invitations" folder. If you wish to use a different folder for invitations please make sure to change the folder path variable to the correct path before running the program.

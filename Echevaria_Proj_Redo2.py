@@ -91,20 +91,20 @@ def main():
         main()
 
 
-def start(path="Invitations"):
-    folder_path = path
+def start(folder_path="Invitations"):
+    abs_folder_path = os.path.abspath(folder_path) # Creates absolute path from the provided relative path
     event_list = []
 
     print("\nDISCLAIMER:\nThe program uses specific patterns to match information inside the invitation.\nDue to this feature, other formats of the information may not get matched and return Not Found.\nIt may also return Not Found if no such information is present in the invitation...\n") 
     pause(10)
     print("Extracting information from the text files...\n")
     pause(3)
-    print(f"Summary of events from the {path}:\n")
+    print(f"Summary of events from the {abs_folder_path}:\n")
     pause(1)
 
     for filename in os.listdir(folder_path): # os directory
         if filename.endswith(".txt"): # text files
-            file_path = os.path.join(folder_path, filename) # Combines folder_path with filename to use it as file path for open() function
+            file_path = os.path.join(abs_folder_path, filename) # Combines folder_path with filename to use it as file path for open() function
             with open(file_path, "r") as file: # opens file in read mode only
                 text = file.read()
                 event = Events(text) # Creates an event object
