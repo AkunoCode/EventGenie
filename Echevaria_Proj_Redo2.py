@@ -81,14 +81,14 @@ class Events:
 
 
 def main():
-    folder_path = input("\nThis program is set to read on the text files located at the Invitation folder.\nWould you like to update the folder path?\nIf yes, please type the path to the folder containing text files. If no, please type \"no\": ").lower()
+    folder_path = input("\nThis program is set to read on the text files located in the Invitation folder.\n\nWould you like to update the folder name?\nIf yes, please type the folder name containing text files or type \"no\": ").lower()
     if folder_path == "no":
-        start()
-    elif os.path.exists(folder_path):
-        start(folder_path)
+        start() # Calls the start function with default arguments
+    elif os.path.exists(os.path.abspath(folder_path)):
+        start(folder_path) # Calls the start function with the folder_path as an argument
     else:
-        print("\nNo such folder found in the directory. Please make sure you are providing a correct path to the folder to avoid errors.")
-        main()
+        print("\nNo such folder found in the directory.\nPlease make sure you are providing the correct folder name and place the folder in the same directory as the code to avoid errors.")
+        main() # prints an error and starts the main function all over
 
 
 def start(folder_path="Invitations"):
@@ -96,22 +96,25 @@ def start(folder_path="Invitations"):
     event_list = []
 
     print("\nDISCLAIMER:\nThe program uses specific patterns to match information inside the invitation.\nDue to this feature, other formats of the information may not get matched and return Not Found.\nIt may also return Not Found if no such information is present in the invitation...\n") 
-    pause(10)
     print("Extracting information from the text files...\n")
-    pause(3)
+    pause(10)
     print(f"Summary of events from the {abs_folder_path}:\n")
     pause(1)
 
-    for filename in os.listdir(folder_path): # os directory
-        if filename.endswith(".txt"): # text files
-            file_path = os.path.join(abs_folder_path, filename) # Combines folder_path with filename to use it as file path for open() function
-            with open(file_path, "r") as file: # opens file in read mode only
-                text = file.read()
-                event = Events(text) # Creates an event object
-                event_list.append(event.summary()) # Adds the summary of the event object to the list
+    try:
+        for filename in os.listdir(folder_path): # os directory
+            if filename.endswith(".txt"): # text files
+                file_path = os.path.join(abs_folder_path, filename) # Combines folder_path with filename to use it as file path for open() function
+                with open(file_path, "r") as file: # opens file in read mode only
+                    text = file.read()
+                    event = Events(text) # Creates an event object
+                    event_list.append(event.summary()) # Adds the summary of the event object to the list
+    
+    except FileNotFoundError:
+        print("Folder not found in the directory.\nPlease make sure that the folder containing the text files is located inside the same directory as the program.\nThen run the program inside the directory")
     
     event_list.sort(key= lambda x: x["Event Date"]) # Sorts the list by value of "Event Date" (Earliest to Latest)
-    
+        
     event_str = ""
     for i in event_list:
         for k,v in i.items():
@@ -122,8 +125,8 @@ def start(folder_path="Invitations"):
     
     event.write_file(event_str)
     pause(3)
-    
-    print("\nThank you!\n-John Leo D. Echevaria (A22-34233)")
+
+    print("\nThank you!\nJohn Leo D. Echevaria (A22-34233)")
     pause(5)
 
 if __name__ == "__main__":
