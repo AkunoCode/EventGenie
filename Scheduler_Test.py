@@ -49,12 +49,8 @@ class Events:
         email_pattern = re.compile(r'[\w.]+@\w+\.[a-zA-Z]{2,4}') # echevaria@example.com
         phone_pattern = re.compile(r'((\+63)[ -]?(\d{3})[ -]?(\d{3})[ -]?(\d{4}))|(09\d{9})') # +63-929-812-5470 or 09298125470
         return (self.find(email_pattern),self.find(phone_pattern))
-    
-    def find(self, pattern):
-        """Match the text with the given pattern, returns the match else returns "Not Found\""""
-        match = pattern.search(self.text)
-        return match.group() if match else "Not Found"
 
+    @property
     def summary(self):
         """Returns a Summary Dictionary of the properties of the Event Object"""
         event_dict = {
@@ -67,16 +63,22 @@ class Events:
             "Event Body" : self.text
         }
         return event_dict
+    
+    def find(self, pattern):
+        """Match the text with the given pattern, returns the match else returns "Not Found\""""
+        match = pattern.search(self.text)
+        return match.group() if match else "Not Found"
 
     def write_file(self, summary):
-        """Prompts the user if they want to save the summary on a txt file"""
+        """Save the string summary of the invitations in a txt file"""
         with open("Invitations_Summary.txt","w") as file:
             file.write(summary)
         print("File saved as 'Invitations_Summary.txt'")
 
     def create_schedule(self, event):
-        outlook = win32com.client.Dispatch("Outlook.Application")
-        appointment = outlook.CreateItem(1)
+        """Creates a schedule in outlook using the win32com.client"""
+        outlook = win32com.client.Dispatch("Outlook.Application") # Creates an instance of Microsoft outlook
+        appointment = outlook.CreateItem(1) # argument "1" means we are creating an appointment
         appointment.Subject = event["Event Name"]
         appointment.Start = event["Event Date"].strftime("%Y-%m-%d")
         appointment.Location = event["Event Location"]
@@ -113,7 +115,7 @@ def start(folder_path="Invitations"):
                 with open(file_path, "r") as file: # opens file in read mode only
                     text = file.read()
                     event = Events(text) # Creates an event object
-                    event_list.append(event.summary()) # Adds the summary of the event object to the list
+                    event_list.append(event.summary) # Adds the summary of the event object to the list
     
     except FileNotFoundError:
         print("Folder not found in the directory.\nPlease make sure that the folder containing the text files is located inside the same directory as the program.\nThen run the program inside the directory")
