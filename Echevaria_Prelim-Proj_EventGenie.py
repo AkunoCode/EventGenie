@@ -88,15 +88,16 @@ class Events:
         appointment.Save()
 
 def main():
-    folder_path = input("\nThis program is set to read on the text files located in the Invitation folder.\n\nWould you like to update the folder name?\nIf yes, please type the folder name containing text files or type \"no\": ").lower()
-    if folder_path == "no":
-        start() # Calls the start function with default arguments
-    elif os.path.exists(os.path.abspath(folder_path)):
-        start(folder_path) # Calls the start function with the folder_path as an argument
-    else:
-        print("\nNo such folder found in the directory.\nPlease make sure you are providing the correct folder name and place the folder in the same directory as the code to avoid errors.")
-        main() # prints an error and starts the main function all over
-
+    while True:
+        folder_path = input("\nThis program is set to read on the text files located in the Invitation folder.\n\nWould you like to update the folder name?\nIf yes, please type the folder name containing text files or type \"no\": ").lower()
+        if folder_path == "no":
+            start() # Calls the start function with default arguments
+            break
+        elif os.path.exists(os.path.abspath(folder_path)):
+            start(folder_path) # Calls the start function with the folder_path as an argument
+            break
+        else:
+            print("\nNo such folder found in the directory.\nPlease make sure you are providing the correct folder name and place the folder in the same directory as the code to avoid errors.")
 
 def start(folder_path="Invitations"):
     abs_folder_path = os.path.abspath(folder_path) # Creates absolute path from the provided relative path
