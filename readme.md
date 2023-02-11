@@ -1,7 +1,7 @@
 # EventGenie (Event Planner Assistant)
 EventGenie is a software that acts as an event planning assistant, helping users to sort and organize events. It extracts information from invitations stored in a specified folder and compiles it into a summary. The software uses regular expressions to identify patterns in the text and returns important details such as the event name, date and time, location, sender's email, and phone number. The summary can be saved as a text file or added to the Outlook calendar using the 'win32com.client' module. With EventGenie, event planning becomes easier and more efficient as it sorts the events from earliest to latest. This makes it easy for users to prioritize and stay on top of their schedule.
 
-This project serves as a prototype for a larger project aimed at accessing and sorting invitation emails directly from a Google account.
+This project serves as a prototype for a larger project aimed at accessing and sorting invitation emails directly from a Google account and with its own dedicated GUI.
 
 ## Usage
 1. Place the text files containing the invitations in the invitation folder or import a folder inside the Echevaria_Prelim-Proj folder and specify the folder name later when prompted by the program.
@@ -10,7 +10,7 @@ This project serves as a prototype for a larger project aimed at accessing and s
 4. The program will then prompt you if you want to create a text file containing the summary of the events from the invitations or schedule the events in your Outlook calendar.
 
 ## Properties
-* text: A string value that represents the text content of the event invitation.
+* __text: A string value that represents the text content of the event invitation.
 * eventName: A string value that returns the matched event name from the text content.
 * eventDate: A tuple of datetime objects representing the date and time of the event.
 * eventLocation: A string value that returns the matched event location from the text content.
