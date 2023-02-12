@@ -22,14 +22,18 @@ class Events:
     def eventDate(self):
         """Returns a tuple of Date and Time Object"""
         date_pattern = re.compile(r'((Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?|Aug(ust)?|Sep(tember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?)\s([0-3]?[0-9](?=([a-z]{2})?)),?\s\d{4})') # Month Day, Year
-        time_pattern = re.compile(r'\d{1,2}:\d{2}\s?(am|pm)?', re.IGNORECASE) # 12:00 AM
+        time_pattern = re.compile(r'\d{1,2}(:\d{2})?\s?(am|pm)?', re.IGNORECASE) # 12:00 AM
         date = self.find(date_pattern)
         time = self.find(time_pattern)
 
         # Convert time into a datetime object
-        if time != "Not Found":
+        if time == "Not Found":
+            time = datetime.time(0, 0)
+        elif ":" in time:
             time = datetime.datetime.strptime(time, '%I:%M %p').time()
-        else: # If time is not found it'll be set to midnight by default.
+        elif ":" not in time:
+            time = datetime.datetime.strptime(time, '%I %p').time()
+        else:
             time = datetime.time(0, 0)
 
         # Convert date into datetime object
