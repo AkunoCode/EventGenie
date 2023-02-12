@@ -15,7 +15,7 @@ class Events:
     @property 
     def eventName(self):
         """Returns the Matched Event Name"""
-        event_pattern = re.compile(r'\"([A-Z0-9]\w+\s?)+\"') # "Leo's 12th Sample Event"
+        event_pattern = re.compile(r'\"(\w+\s?)+\"') # "Leo's 12th Sample Event"
         return self.find(event_pattern)
     
     @property 
@@ -26,12 +26,16 @@ class Events:
         date = self.find(date_pattern)
         time = self.find(time_pattern)
 
-        # Convert the date and time into a datetime object
+        # Convert time into a datetime object
         if time != "Not Found":
             time = datetime.datetime.strptime(time, '%I:%M %p').time()
         else: # If time is not found it'll be set to midnight by default.
             time = datetime.time(0, 0)
-        if "," in date: # To avoid errors in cases where the date is formatted with a "," after the day.
+
+        # Convert date into datetime object
+        if date == "Not Found":
+            date = datetime.date.today()
+        elif "," in date: # To avoid errors in cases where the date is formatted with a "," after the day.
             date = datetime.datetime.strptime(date, '%B %d, %Y').date()
         else:
             date = datetime.datetime.strptime(date, '%B %d %Y').date()
