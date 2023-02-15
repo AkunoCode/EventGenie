@@ -77,19 +77,25 @@ class Events:
         return match.group() if match else "Not Found"
 
     def write_txtfile(self, summary):
-        """Save the string summary of the invitations in a txt file"""
+        """Save the string summary of the invitations in a txt file\nsummary can be a list of Event object or an Event object."""
         with open("Invitations_Summary.txt","w") as file:
-            file.write(summary)
+            if type(summary) == list: # if summary is a list of Event object, it'll get the textSummary() of each and combine it as one string.
+                events_text = ""
+                for i in summary:
+                    events_text += i.textSummary()
+                file.write(events_text)
+            elif type(summary) == str:
+                file.write(summary.textSummary())
     
     def write_csvfile(self, dictSummary):
+        """Write a '.csv' file as the summary of the event based on the dictSummary property of Event object."""
         with open("Invitations_Summary.csv", "w") as file:
-            writer = csv.DictWriter(file, fieldnames=dictSummary.keys())
-            writer.writeheader()
-            writer.writerow(dictSummary)
+            writer = csv.writer(file, delimiter=",",lineterminator="\n")
+            writer.writerows(dictSummary)
     
-    def textSummary(self, dictSummary):
+    def textSummary(self):
         event_str = ""
-        for k,v in dictSummary.items():
+        for k,v in self.dictSummary.items():
             if k == "Event Body":
                 continue
             else:
@@ -98,14 +104,14 @@ class Events:
         
         return event_str
 
-    def create_schedule(self, event):
+    def create_schedule(self):
         """Creates a schedule in outlook using the win32com.client"""
         outlook = win32com.client.Dispatch("Outlook.Application") # Creates an instance of Microsoft outlook
         appointment = outlook.CreateItem(1) # argument "1" means we are creating an appointment
-        appointment.Subject = event["Event Name"]
-        appointment.Start = event["Event Date"].strftime("%Y-%m-%d")
-        appointment.Location = event["Event Location"]
-        appointment.Body = event["Event Body"]
+        appointment.Subject = self.dictSummary["Event Name"]
+        appointment.Start = self.dictSummary["Event Date"].strftime("%Y-%m-%d")
+        appointment.Location = self.dictSummary["Event Location"]
+        appointment.Body = self.dictSummary["Event Body"]
         appointment.ReminderSet = True
         appointment.ReminderMinutesBeforeStart = 15
         appointment.Save()

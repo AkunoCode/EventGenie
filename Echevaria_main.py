@@ -1,54 +1,41 @@
 import sys
 from Echevaria_Event import Events
 import os
+import csv
 from time import sleep as pause
 
-def intro():
-    folder_path = ""
+def read():
     if os.path.exists(os.path.abspath('Invitations_Summary.txt')):
         if input("'Invitations_Summary.txt' already exists. Would you like to read it? [Y/N]: ").lower() == "y":
             with open('Invitations_Summary.txt',"r") as file:
                 for i in file.readlines():
                     print(i,end="")
                     pause(0.1)
-
-    print("\nThis program is set to read on the text files located in the 'Invitations' folder\n")
-    print("Choose an operation to perform:")
-    print("[1] Create New Summary")
-    print("[2] Change Folder Name")
-    print("[3] Exit")
-
-    choice = 0
-    while True:
-        choice = input()
-        if choice == "1":
-            start()
-            break
-
-        elif choice == "2":
-            folder_path = folderChange()
-            print(f"Folder name changed to '{folder_path}'\n")
-            print("Choose an operation to perform:")
-            print("[1] Create New Summary (this will overwrite the existing one)")
-            print("[2] Exit")
-            while True:
-                choice = input()
-                if choice == "1":
-                    start(folder_path)
-                    break
-                elif choice == "2":
-                    exit()
-                else:
-                    print("Please choose among the available options.")
-
-        elif choice == "3":
-            exit()
-        else:
-            print("Please choose among the available options.")
+    elif os.path.exists(os.path.abspath('Invitations_Summary.csv')):
+        if input("'Invitations_Summary.csv' already exists. Would you like to read it? [Y/N]: ").lower() == "y":
+            with open('Invitations_Summary.csv',"r") as file:
+                reader = csv.reader(file)
+                next(reader) # Skip the header row
+                for row in reader:
+                    print(f"Event Name: {row[0]}")
+                    print(f"Event Date: {row[1]}")
+                    pause(0.1)
+                    print(f"Event Time: {row[2]}")
+                    pause(0.1)
+                    print(f"Event Location: {row[3]}")
+                    pause(0.1)
+                    print(f"Event Sender Email: {row[4]}")
+                    pause(0.1)
+                    print(f"Event Sender Phone: {row[5]}")
+                    pause(0.1)
+                    print("")        
+    else:
+        print("\nNo existing summary file found.")
+        pause(1)
 
 def folderChange():
     while True:
-        folder_path = input("\nPlease type the new folder name to search for: ").lower()
+        folder_path = input("\nPlease type the new folder name to search for: ")
         if os.path.exists(os.path.abspath(folder_path)):
             break
         else:
@@ -60,15 +47,53 @@ def exit():
     pause(5)
     sys.exit()
 
-def start(folder_path="Invitations"):
+def main():
+    folder_path = ""
+
+    print("\nThis program is set to read on the text files located in the 'Invitations' folder\n")
+    print("Choose an operation to perform:")
+    print("[1] Create New Summary")
+    print("[2] Change Folder Name")
+    print("[3] Exit")
+
+    choice = 0
+    while True:
+        choice = input()
+        if choice == "1":
+            start_extract()
+            break
+
+        elif choice == "2":
+            folder_path = folderChange()
+            print(f"Folder name changed to '{folder_path}'\n")
+            print("Choose an operation to perform:")
+            print("[1] Create New Summary")
+            print("[2] Exit")
+            while True:
+                choice = input()
+                if choice == "1":
+                    start_extract(folder_path)
+                    break
+                elif choice == "2":
+                    exit()
+                else:
+                    print("Please choose among the available options.")
+
+        elif choice == "3":
+            exit()
+        else:
+            print("Please choose among the available options.")
+
+
+
+def start_extract(folder_path="Invitations"):
     abs_folder_path = os.path.abspath(folder_path) # Creates absolute path from the provided relative path
     event_list = []
 
     print("\nDISCLAIMER:\nThe program uses specific patterns to match information inside the invitation.\nDue to this feature, other formats of the information may not get matched and return Not Found.\nIt may also return Not Found if no such information is present in the invitation...\n") 
-    print("Extracting information from the text files...\n")
-    pause(10)
-    print(f"Summary of events from the {abs_folder_path}:\n")
     pause(1)
+    print("Extracting information from the text files...")
+    pause(10)
 
     try:
         for filename in os.listdir(folder_path): # os directory
@@ -77,45 +102,57 @@ def start(folder_path="Invitations"):
                 with open(file_path, "r") as file: # opens file in read mode only
                     text = file.read()
                     event = Events(text) # Creates an event object
-                    event_list.append(event.dictSummary) # Adds the summary of the event object to the list
+                    event_list.append(event) # Adds the summary of the event object to the list
     
     except FileNotFoundError:
         print("Folder not found in the directory.\nPlease make sure that the folder containing the text files is located inside the same directory as the program.\nThen run the program inside the directory")
     
-    event_list.sort(key= lambda x: x["Event Date"]) # Sorts the list by value of "Event Date" (Earliest to Latest)
+    print("\nEvent Data Extracted.")  
+    pause(1)
 
-    events_text = [] 
-    for i in event_list:
-        event_str = event.textSummary(i)
-        print(event_str)
-        events_text.append(event_str)
-        pause(1)
+    while True:
+        if input("\nWould you like to sort the events by order of most recent to latest? [Y/N]: ").lower() == "y":
+            event_list.sort(key= lambda x: x.dictSummary["Event Date"]) # Sorts the list by value of "Event Date" (Earliest to Latest)
+            print("\nEvents Sorted.")
+            break
+        else:
+            break  
     
-    
+    pause(1)
     print("\nChoose an operation to perform:")
-    print("[1] Save as a '.txt' file.")
-    print("[2] Save as a 'csv' file.")
-    print("[3] Create Schedule in Outlook Calendar.")
-    print("[4] Exit")
+    print("[1] Print Summary")
+    print("[2] Save as a '.txt' file.")
+    print("[3] Save as a '.csv' file.")
+    print("[4] Create Schedule in Outlook Calendar.")
+    print("[5] Exit")
 
     while True:
         choice = input()
         if choice == "1":
-            event.write_txtfile("".join(events_text))
-            print("File saved as 'Invitations_Summary.txt'")
-            break
+            print(f"\nSummary of events from the {abs_folder_path}:\n")
+            for i in event_list:
+                event_str = i.textSummary()
+                print(event_str)
+                pause(1)
         elif choice == "2":
-            for i in event_list:
-                i.pop("Event Body")
-                event.write_csvfile(i)
-            print("File saved as 'Invitations_Summary.txt'")
-            break    
+            event.write_txtfile(event_list)
+            print("File saved as 'Invitations_Summary.txt'. You can read the file after restarting the program")
+            break
         elif choice == "3":
+            csv_list = [["Event Name","Event Date","Event Time","Event Location","Sender Email","Sender Phone"],]
             for i in event_list:
-                event.create_schedule(i)
+                i = i.dictSummary
+                i.pop("Event Body")
+                csv_list.append(i.values())
+            event.write_csvfile(csv_list)
+            print("File saved as 'Invitations_Summary.txt'. You can read the file after restarting the program")
+            break    
+        elif choice == "4":
+            for i in event_list:
+                i.create_schedule()
             print("Events saved in your Outlook calendar.")
             break
-        elif choice == "4":
+        elif choice == "5":
             exit()
         else:
             print("Please choose among the available options.")
@@ -125,4 +162,8 @@ def start(folder_path="Invitations"):
     pause(5)
 
 if __name__ == "__main__":
-    intro()
+    if os.path.exists(os.path.abspath('Invitations_Summary.csv')) or os.path.exists(os.path.abspath('Invitations_Summary.txt')):
+        read()
+        exit()
+    else:
+        main()
