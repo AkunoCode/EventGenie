@@ -2,6 +2,7 @@
 # CP102 - M001
 
 import re
+import csv
 import datetime
 import win32com.client
 
@@ -22,7 +23,7 @@ class Events:
     def eventDate(self):
         """Returns a tuple of Date and Time Object"""
         date_pattern = re.compile(r'((Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?|Aug(ust)?|Sep(tember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?)\s([0-3]?[0-9](?=([a-z]{2})?)),?\s\d{4})') # Month Day, Year
-        time_pattern = re.compile(r'\d{1,2}(:\d{2})?\s?(am|pm)?', re.IGNORECASE) # 12:00 AM
+        time_pattern = re.compile(r'\d{1,2}:\d{2}\s?(am|pm)?', re.IGNORECASE) # 12:00 AM
         date = self.find(date_pattern)
         time = self.find(time_pattern)
 
@@ -31,8 +32,6 @@ class Events:
             time = datetime.time(0, 0)
         elif ":" in time:
             time = datetime.datetime.strptime(time, '%I:%M %p').time()
-        elif ":" not in time:
-            time = datetime.datetime.strptime(time, '%I %p').time()
         else:
             time = datetime.time(0, 0)
 
@@ -59,7 +58,7 @@ class Events:
         return (self.find(email_pattern),self.find(phone_pattern))
 
     @property
-    def summary(self):
+    def dictSummary(self):
         """Returns a Summary Dictionary of the properties of the Event Object"""
         event_dict = {
             "Event Name": self.eventName,
@@ -77,11 +76,27 @@ class Events:
         match = pattern.search(self.__text)
         return match.group() if match else "Not Found"
 
-    def write_file(self, summary):
+    def write_txtfile(self, summary):
         """Save the string summary of the invitations in a txt file"""
         with open("Invitations_Summary.txt","w") as file:
             file.write(summary)
-        print("File saved as 'Invitations_Summary.txt'")
+    
+    def write_csvfile(self, dictSummary):
+        with open("Invitations_Summary.csv", "w") as file:
+            writer = csv.DictWriter(file, fieldnames=dictSummary.keys())
+            writer.writeheader()
+            writer.writerow(dictSummary)
+    
+    def textSummary(self, dictSummary):
+        event_str = ""
+        for k,v in dictSummary.items():
+            if k == "Event Body":
+                continue
+            else:
+                event_str += f"{k}: {v}\n"
+        event_str += "\n"
+        
+        return event_str
 
     def create_schedule(self, event):
         """Creates a schedule in outlook using the win32com.client"""
