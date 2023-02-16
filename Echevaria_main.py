@@ -4,6 +4,8 @@ import os
 import csv
 from time import sleep as pause
 
+os.system('cls')
+
 def read():
     if os.path.exists(os.path.abspath('Invitations_Summary.txt')):
         if input("'Invitations_Summary.txt' already exists. Would you like to read it? [Y/N]: ").lower() == "y":
@@ -60,10 +62,12 @@ def main():
     while True:
         choice = input()
         if choice == "1":
+            os.system('cls')
             start_extract()
             break
 
         elif choice == "2":
+            os.system('cls')
             folder_path = folderChange()
             print(f"Folder name changed to '{folder_path}'\n")
             print("Choose an operation to perform:")
@@ -72,14 +76,17 @@ def main():
             while True:
                 choice = input()
                 if choice == "1":
+                    os.system('cls')
                     start_extract(folder_path)
                     break
                 elif choice == "2":
+                    os.system('cls')
                     exit()
                 else:
                     print("Please choose among the available options.")
 
         elif choice == "3":
+            os.system('cls')
             exit()
         else:
             print("Please choose among the available options.")
@@ -111,6 +118,7 @@ def start_extract(folder_path="Invitations"):
     pause(1)
 
     while True:
+        os.system('cls')
         if input("\nWould you like to sort the events by order of most recent to latest? [Y/N]: ").lower() == "y":
             event_list.sort(key= lambda x: x.dictSummary["Event Date"]) # Sorts the list by value of "Event Date" (Earliest to Latest)
             print("\nEvents Sorted.")
@@ -118,7 +126,8 @@ def start_extract(folder_path="Invitations"):
         else:
             break  
     
-    pause(1)
+    pause(2)
+    os.system('cls')
     print("\nChoose an operation to perform:")
     print("[1] Print Summary")
     print("[2] Save as a '.txt' file.")
@@ -129,16 +138,20 @@ def start_extract(folder_path="Invitations"):
     while True:
         choice = input()
         if choice == "1":
+            os.system('cls')
             print(f"\nSummary of events from the {abs_folder_path}:\n")
             for i in event_list:
                 event_str = i.textSummary()
                 print(event_str)
                 pause(1)
+            exit()
         elif choice == "2":
+            os.system('cls')
             event.write_txtfile(event_list)
             print("File saved as 'Invitations_Summary.txt'. You can read the file after restarting the program")
             break
         elif choice == "3":
+            os.system('cls')
             csv_list = [["Event Name","Event Date","Event Time","Event Location","Sender Email","Sender Phone"],]
             for i in event_list:
                 i = i.dictSummary
@@ -148,6 +161,7 @@ def start_extract(folder_path="Invitations"):
             print("File saved as 'Invitations_Summary.txt'. You can read the file after restarting the program")
             break    
         elif choice == "4":
+            os.system('cls')
             for i in event_list:
                 i.create_schedule()
             print("Events saved in your Outlook calendar.")
@@ -156,10 +170,6 @@ def start_extract(folder_path="Invitations"):
             exit()
         else:
             print("Please choose among the available options.")
-    pause(3)
-
-    print("\nThank you!\nJohn Leo D. Echevaria (A22-34233)")
-    pause(5)
 
 if __name__ == "__main__":
     if os.path.exists(os.path.abspath('Invitations_Summary.csv')) or os.path.exists(os.path.abspath('Invitations_Summary.txt')):
