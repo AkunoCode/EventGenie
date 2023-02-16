@@ -9,12 +9,15 @@ os.system('cls')
 def read():
     if os.path.exists(os.path.abspath('Invitations_Summary.txt')):
         if input("'Invitations_Summary.txt' already exists. Would you like to read it? [Y/N]: ").lower() == "y":
+            os.system('cls')
             with open('Invitations_Summary.txt',"r") as file:
                 for i in file.readlines():
                     print(i,end="")
                     pause(0.1)
+
     elif os.path.exists(os.path.abspath('Invitations_Summary.csv')):
         if input("'Invitations_Summary.csv' already exists. Would you like to read it? [Y/N]: ").lower() == "y":
+            os.system('cls')
             with open('Invitations_Summary.csv',"r") as file:
                 reader = csv.reader(file)
                 next(reader) # Skip the header row
@@ -158,7 +161,7 @@ def start_extract(folder_path="Invitations"):
                 i.pop("Event Body")
                 csv_list.append(i.values())
             event.write_csvfile(csv_list)
-            print("File saved as 'Invitations_Summary.txt'. You can read the file after restarting the program")
+            print("File saved as 'Invitations_Summary.csv'. You can read the file after restarting the program")
             break    
         elif choice == "4":
             os.system('cls')
@@ -174,6 +177,6 @@ def start_extract(folder_path="Invitations"):
 if __name__ == "__main__":
     if os.path.exists(os.path.abspath('Invitations_Summary.csv')) or os.path.exists(os.path.abspath('Invitations_Summary.txt')):
         read()
-        exit()
+        main()
     else:
         main()
