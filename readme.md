@@ -1,6 +1,5 @@
 [![EventGenie (Event Planning Assistant)](https://drive.google.com/uc?export=view&id=1fnSFi1U4bZCHAFh3B_QLd5CrjoHzU6Qw "EventGenie")](https://github.com/AkunoCode/EventGenie)
 
-# EventGenie (Event Planner Assistant)
 EventGenie is a software that acts as an event planning assistant, helping users to sort and organize events. It extracts information from invitations stored in a specified folder and compiles it into a summary. The software uses regular expressions to identify patterns in the text and returns important details such as the event name, date and time, location, sender's email, and phone number. The summary can be saved as a '.txt' file, '.csv' file or added directly to the Outlook calendar as an appointment using the 'win32com.client' module. With EventGenie, event planning becomes easier and more efficient as it sorts the events from earliest to latest. This makes it easy for users to prioritize and stay on top of their schedule.
 
 This project serves as a prototype for a larger project aimed at accessing and sorting invitation emails directly from a Google account and with its own dedicated GUI.
