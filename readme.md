@@ -10,19 +10,34 @@ This project serves as a prototype for a larger project aimed at accessing and s
 3. The program has navigational text UI that would show you the options for the actions that you can use.
 
 ## Properties
-* __text: A string value that represents the text content of the event invitation.
-* eventName: A string value that returns the matched event name from the text content.
-* eventDate: A tuple of datetime objects representing the date and time of the event.
-* eventLocation: A string value that returns the matched event location from the text content.
-* eventSender: A tuple of two string values representing the email and phone number of the event sender.
-* dictSummary: A dictionary value that holds the summary of all properties of the event.
+* **__text**: A string value that represents the text content of the event invitation.
+* **eventName**: A string value that returns the matched event name from the text content.
+* **eventDate**: A tuple of datetime objects representing the date and time of the event.
+* **eventLocation**: A string value that returns the matched event location from the text content.
+* **eventSender**: A tuple of two string values representing the email and phone number of the event sender.
+* **dictSummary**: A dictionary value that holds the summary of all properties of the event.
+
 ## Methods
-* find(pattern): A method that matches the text content with the provided regular expression pattern and returns the matched string.
-* textSummary(): A method that returns the converted string summary information from the dictSummary().
-* write_txtfile(summary): A method that saves the summary as a text file.
-* write_csvfile(summary): A method that saves the summary as a comma seperated value file.
-* create_schedule(event): A method that creates a schedule in Outlook calendar
+* **find(pattern)**: A method that matches the text content with the provided regular expression pattern and returns the matched string.
+* **textSummary()**: A method that returns the converted string summary information from the dictSummary().
+* **write_txtfile(summary)**: A method that saves the summary as a text file.
+* **write_csvfile(summary)**: A method that saves the summary as a comma separated value file.
+* **create_schedule(event)**: A method that creates a schedule in Outlook calendar.
+
 ## Note
 * Please run the program and the folder in the same directory to avoid errors.
 * The program only works with text files and only matches specific patterns. Any text that does not match the specified patterns will not be extracted.
 * The program is currently set to look for text files in "EventGenie\Invitations" folder by default. You can change the folder when prompted by the program but make sure it is still inside the 'EventGenie' folder. 
+
+## On-Development Planned Features
+<p align="center">
+  <img src="https://drive.google.com/uc?export=view&id=1URt9nSAZz3fwQ-8iQ8Od29-37WqGwEH_" alt="EventGenieGUI_Concept">
+</p>
+
+* **Graphical User Interface:** To create a GUI for the program to enable visually pleasing and user-friendly access to the program.
+* **Added Functions:**
+  * **Viewing of full Email Contents**
+  * **Editing of Summary Information**
+  * **Deletion of Summary Records**
+* **Database:** Make use of database to seeminglessly save and view previously accessed datas.
+* **Synching with Email Accounts:** Connect with Email accounts such as Google to be able to access data and create summary out of the emails in the user's email inbox.
